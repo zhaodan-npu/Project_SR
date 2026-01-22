@@ -1,0 +1,4 @@
+python plot_mfpt_vs_D_fixed_tau.py --indir results_fpt_A1 --tau 0.10 --metric mpft_hit --outdir figs_fpt_A1 --fmt png,pdf
+
+python merge_fpt_A1_to_mat.py --indir results_fpt_A1 --out merged_fpt_A1.mat --with-paths
+
