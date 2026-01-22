@@ -20,7 +20,8 @@ alpha_vals=(0.0 0.25 0.5 0.75)
 tau_vals=(0.0 0.1 0.2)
 D_vals=($(seq 0.0 0.02 1.0))
 NUM_PATHS=20
-OUTPUT_DIR="/p/tmp/junyouzh"
+# 将输出写到提交作业的当前目录，避免写到其他路径
+OUTPUT_DIR="$SLURM_SUBMIT_DIR"
 mkdir -p "$OUTPUT_DIR" logs
 
 OFFSET=${OFFSET:-0}  # 如果未设置OFFSET，默认为0
