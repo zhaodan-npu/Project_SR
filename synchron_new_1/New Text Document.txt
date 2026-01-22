@@ -1,0 +1,1 @@
+python plot_syncstd_vs_D_fixed_tau.py --indir results_sync_A1 --tau 0.10 --outdir figs_sync_A1 --fmt png,pdf

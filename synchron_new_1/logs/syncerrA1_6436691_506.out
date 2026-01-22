@@ -1,0 +1,1 @@
+TASK=506 alpha=0.25 tau=0.2 D=0.01 npaths=20

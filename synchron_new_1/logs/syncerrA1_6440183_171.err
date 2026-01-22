@@ -1,0 +1,12 @@
+┌ Info: Done
+│   alpha = 0.0
+│   tau = 0.1
+│   D = 0.7
+│   npaths = 20
+│   meanE = 0.8731044616329401
+│   stdE = 0.004427845466497346
+│   outdir = "results_syncerr_A1"
+│   p_edge = 0.3
+│   net_seed = 20250101
+│   n_edges = 378
+└   n_triangles = 598

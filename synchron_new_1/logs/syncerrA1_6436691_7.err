@@ -1,0 +1,22 @@
+Precompiling packages...
+    Statistics Being precompiled by another machine (hostname: csl14c178, pid: 3276022, pidfile: /home/danzhao/coupled/test2/20251118revised/choose_platform_1/julia_mcbb/.julia_depot/compiled/v1.12/Statistics/ERcPL_4psgf.ji.pidfile)
+  20149.5 ms  ✓ Statistics (serial)
+  1 dependency successfully precompiled in 20 seconds
+ERROR: LoadError: ArgumentError: Package DifferentialEquations not found in current path.
+- Run `import Pkg; Pkg.add("DifferentialEquations")` to install the DifferentialEquations package.
+Stacktrace:
+ [1] macro expansion
+   @ ./loading.jl:2400 [inlined]
+ [2] macro expansion
+   @ ./lock.jl:376 [inlined]
+ [3] __require(into::Module, mod::Symbol)
+   @ Base ./loading.jl:2383
+ [4] require(into::Module, mod::Symbol)
+   @ Base ./loading.jl:2359
+ [5] include(mod::Module, _path::String)
+   @ Base ./Base.jl:306
+ [6] exec_options(opts::Base.JLOptions)
+   @ Base ./client.jl:317
+ [7] _start()
+   @ Base ./client.jl:550
+in expression starting at /home/danzhao/SR/synchron_new_1/scan_sync_error_A1.jl:24
