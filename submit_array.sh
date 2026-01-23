@@ -11,9 +11,12 @@
 
 set -euo pipefail
 
-# Julia 安装与环境
-JULIA_CMD="$HOME/myenv/bin/julia"   # Julia 可执行文件
-JULIA_PROJECT="$HOME/myenv"         # 要激活的 Project 环境
+# ---- Julia 配置 ----
+# 如果集群提供 julia 模块，保持 module load；否则将 JULIA_CMD 改为实际安装路径
+module purge
+module load julia
+JULIA_CMD=${JULIA_CMD:-$(which julia)}
+JULIA_PROJECT=${JULIA_PROJECT:-.}   # 如有自定义环境，改成其路径
 
 export JULIA_DEPOT_PATH="$HOME/.julia"
 export JULIA_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
