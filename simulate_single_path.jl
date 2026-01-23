@@ -280,7 +280,19 @@ if abspath(PROGRAM_FILE) == @__FILE__
 
     mkpath(outdir)
 
-    for α in alphas, τ in taus, D in Ds, path_idx in paths
+    # 预分配高维数组以便一次性写出全集结果
+    A_len = length(alphas); T_len = length(taus); D_len = length(Ds); P_len = length(paths)
+    times_ref = collect(0:save_dt:T)
+    Lt = length(times_ref)
+
+    mean_all  = Array{Float64}(undef, A_len, T_len, D_len, P_len, Lt)
+    sync_all  = Array{Float64}(undef, A_len, T_len, D_len, P_len, Lt)
+    Ebar_all  = fill(NaN, A_len, T_len, D_len, P_len)
+    hit_all   = fill(0,   A_len, T_len, D_len, P_len)
+    fpt_all   = fill(NaN, A_len, T_len, D_len, P_len)
+    fptc_all  = fill(NaN, A_len, T_len, D_len, P_len)
+
+    for (ia, α) in enumerate(alphas), (it, τ) in enumerate(taus), (idD, D) in enumerate(Ds), (ip, path_idx) in enumerate(paths)
         αtag = round(Int, α * 1000)
         τtag = round(Int, τ * 1000)
         Dtag = round(Int, D * 1000)
@@ -288,6 +300,15 @@ if abspath(PROGRAM_FILE) == @__FILE__
 
         res = simulate_path(seed, α, τ, D)
 
+        # 存高维数组
+        mean_all[ia, it, idD, ip, :] = res.mean
+        sync_all[ia, it, idD, ip, :] = res.sync
+        Ebar_all[ia, it, idD, ip]    = res.Ebar
+        hit_all[ia, it, idD, ip]     = res.hit
+        fpt_all[ia, it, idD, ip]     = res.t_fpt
+        fptc_all[ia, it, idD, ip]    = res.t_fpt_censored
+
+        # 仍写单文件（向后兼容）
         fname = joinpath(outdir, "alpha$(α)_tau$(τ)_D$(D)_path$(path_idx).mat")
         matwrite(fname, Dict(
             "result" => res.mean,   # 兼容旧版字段名
@@ -309,4 +330,25 @@ if abspath(PROGRAM_FILE) == @__FILE__
         ))
         @info "done" alpha=α tau=τ D=D path=path_idx seed=seed hit=res.hit t_fpt=res.t_fpt Ebar=res.Ebar file=fname
     end
+
+    # 写出全集合一文件，便于一次加载高维数组
+    batch_file = joinpath(outdir, "batch_all.mat")
+    matwrite(batch_file, Dict(
+        "alphas" => alphas, "taus" => taus, "Ds" => Ds, "paths" => paths,
+        "times" => times_ref,
+        "mean_all" => mean_all,
+        "sync_all" => sync_all,
+        "Ebar_all" => Ebar_all,
+        "hit_all" => hit_all,
+        "t_fpt_all" => fpt_all,
+        "t_fpt_censored_all" => fptc_all,
+        "meta" => Dict(
+            "sigma"=>σ, "a"=>a, "b"=>b, "A"=>A, "Omega"=>Ω,
+            "N"=>N, "dt"=>dt, "save_dt"=>save_dt, "T"=>T, "t_trans"=>t_trans,
+            "T_FPT"=>T_FPT, "x_init"=>X_INIT, "x_thr"=>X_THR,
+            "p_edge"=>p_edge, "net_seed"=>NET_SEED,
+            "seedbase"=>seedbase
+        )
+    ))
+    @info "batch saved" file=batch_file
 end
